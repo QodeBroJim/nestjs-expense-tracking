@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  api:
+    #image: qodebrojim/nestjs-finances
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    ports:
+      - '8080:3000'
+    env_file:
+      - .env
+
+  db:
+    image: ${DOCKER_DB_IMAGE}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    environment:
+      SA_PASSWORD: ${DATABASE_PASSWORD}
+      ACCEPT_EULA: ${ACCEPT_EULA}
+    volumes:
+      - sqlsystem:${SQL_SYSTEM}
+      - sqldata:${SQL_DATA}
+      - sqllog:${SQL_LOG}
+      - sqlbackup:${SQL_BACKUP}
+
+volumes:
+  sqlsystem:
+  sqldata:
+  sqllog:
+  sqlbackup:
