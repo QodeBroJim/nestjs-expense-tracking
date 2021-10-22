@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Expense } from './expenses/entities/expense.entity';
+import { ExpensesModule } from './expenses/expenses.module';
 
 @Module({
   imports: [
@@ -12,12 +14,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
+      entities: [Expense],
       synchronize: true, // set to false in production
+      migrations: [process.env.MIGRATIONS],
+      cli: {
+        migrationsDir: process.env.MIGRATIONS_DIR,
+      },
       extra: {
         trustServerCertificate: true, // set to true for development
       },
     }),
+    ExpensesModule,
   ],
   controllers: [],
   providers: [],
