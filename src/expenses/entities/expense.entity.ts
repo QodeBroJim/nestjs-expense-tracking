@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+import { Payment } from './payment.entity';
 
 @Entity('expenses')
 export class Expense {
@@ -6,23 +13,27 @@ export class Expense {
   id: number;
 
   @Column()
-  name: string;
+  expense_name: string;
 
   @Column()
-  due_amount: number;
+  initial_loan_amount: number;
 
   @Column()
-  actual_payment_amount: number;
+  current_loan_balance: number;
+
+  @Column()
+  due_date: number;
 
   @Column()
   expense_type: string;
 
-  @Column()
-  payment_date: Date;
-
-  @Column()
-  due_date: Date;
-
-  @Column()
-  balance: number;
+  @ManyToMany((type) => Payment, (payment) => payment.expense, {
+    cascade: true,
+  })
+  @JoinTable({
+    name: 'expense_payments',
+    joinColumn: { name: 'payment_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'expense_id', referencedColumnName: 'id' },
+  })
+  payment: Payment[];
 }
