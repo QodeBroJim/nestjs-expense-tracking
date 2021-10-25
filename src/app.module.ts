@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Expense } from './expenses/entities/expense.entity';
-import { Payment } from './expenses/entities/payment.entity';
 import { ExpensesModule } from './expenses/expenses.module';
+import { Payment } from './expenses/entities/payment.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { ExpensesModule } from './expenses/expenses.module';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [Expense, Payment],
+      entities: [Expense, Payment, User],
       synchronize: true, // set to false in production
       migrations: [process.env.MIGRATIONS],
       cli: {
@@ -26,6 +28,7 @@ import { ExpensesModule } from './expenses/expenses.module';
       },
     }),
     ExpensesModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
